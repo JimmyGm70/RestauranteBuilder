@@ -1,4 +1,5 @@
 import MenuBuilder from "./MenuBuilder";
+import { BebidaBuilder, EntradaBuilder, PlatoFuerteBuilder, PostreBuilder } from "./interfaces";
 
 export default class Director {
 
@@ -8,11 +9,11 @@ export default class Director {
     this.menuBuilder = new MenuBuilder();
   }
 
-  public prepararMenu(): void {
-    this.menuBuilder.colocarEntrada();
-    this.menuBuilder.colocarBebida();
-    this.menuBuilder.colocarPlatoFuerte();
-    this.menuBuilder.colocarPostre();
+  public prepararMenu(eb: EntradaBuilder, bb: BebidaBuilder, pfb: PlatoFuerteBuilder, pb: PostreBuilder): void {
+    this.menuBuilder.colocarEntrada(eb);
+    this.menuBuilder.colocarBebida(bb);
+    this.menuBuilder.colocarPlatoFuerte(pfb);
+    this.menuBuilder.colocarPostre(pb);
   }
 
 }

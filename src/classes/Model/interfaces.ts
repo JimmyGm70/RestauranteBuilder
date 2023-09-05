@@ -10,15 +10,14 @@ export interface PlatoFuerte extends Producto{
     guarnicion: Guarnicion[]
 }
 
-export interface Bebida extends Producto{
+export interface Bebida extends Producto {
     nombre: string;
 }
 
 export interface BebidaCarbonatada extends Bebida{
-    sabor: string;
 }
 
-export interface BebidaNatural extends Bebida{
-    fruta: Fruta[]
+export interface BebidaNatural extends Bebida {
+    fruta: Fruta | Fruta[]| null
 }
 

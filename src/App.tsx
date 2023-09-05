@@ -2,7 +2,10 @@ import { useState } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 
-// Esto es un comentario
+/**
+ * Tabla y resumen en tiempo real - Jimmy comida de estadio
+ * Landing Page y Formulario de Menú - Pablo Bichote 
+ */
 
 function App() {
   const [count, setCount] = useState(0)
@@ -11,7 +14,7 @@ function App() {
     <>
       <div>
 
-        <h1 className="text-3xl font-bold underline">
+        <h1 className="text-3xl font-bold underline ">
           Hello Vite + React!
         </h1>
 
