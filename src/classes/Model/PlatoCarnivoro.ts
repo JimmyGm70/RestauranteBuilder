@@ -1,13 +1,15 @@
 import Carne from "./Carne";
-import PlatoFuerte from "./interfaces";
+import Guarnicion from "./Guarnicion";
+import { PlatoFuerte } from "./interfaces";
 
 export default class PlatoCarnivoro implements PlatoFuerte{
     //atributos
-    carne: Carne
-    
-    constructor(public guarnicion: [], carne: Carne){
+    carne: Carne | null;
+    guarnicion: Guarnicion[]
+
+    constructor(public precio: number){
         this.guarnicion = [];
-        this.carne = carne;
+        this.carne = null;
     }
 }
 

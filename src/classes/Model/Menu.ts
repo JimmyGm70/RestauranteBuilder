@@ -3,21 +3,28 @@ import Entrada from './Entrada'
 import Postre from './Postre'
 
 export default class Menu{
-    bebida: Bebida;
-    entrada: Entrada;
-    platoFuerte: PlatoFuerte;
-    postre: Postre;
+    bebida: Bebida | null;
+    entrada: Entrada | null;
+    platoFuerte: PlatoFuerte | null;
+    postre: Postre | null;
 
-    constructor(bebida: Bebida, entrada: Entrada, platoFuerte: PlatoFuerte, postre: Postre){
-        this.bebida = bebida;
-        this.entrada = entrada;
-        this.platoFuerte = platoFuerte;
-        this.postre = postre;
+    constructor() {
+        this.bebida = null;
+        this.entrada = null;
+        this.platoFuerte = null;
+        this.postre = null;
     }
 
     //Métodos
 
     calcularCosto(): number {
-        return (this.bebida.precio+this.entrada.precio+this.platoFuerte.precio+this.postre.precio)
-    };
+        let valorMenu = 0;
+
+        if (this.bebida) valorMenu += this.bebida.precio;
+        if (this.entrada) valorMenu += this.entrada.precio;
+        if (this.platoFuerte) valorMenu += this.platoFuerte.precio;
+        if (this.postre) valorMenu += this.postre.precio;
+
+        return valorMenu;
+    }
 }
