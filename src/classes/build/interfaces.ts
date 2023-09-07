@@ -9,23 +9,27 @@ import Jugo from "../Model/Jugo"
 
 // Objetivo: Definir las interfaces de los builders
 
-interface EntradaBuilder {
+interface GeneralBuilder {
+
+}
+
+interface EntradaBuilder extends GeneralBuilder {
   entrada: Entrada
   getEntrada(): Entrada
 }
 
-interface BebidaBuilder {   
+interface BebidaBuilder extends GeneralBuilder {   
   getBebida(): Bebida
 } 
 
-interface PostreBuilder {
+interface PostreBuilder extends GeneralBuilder {
   postre: Postre
   colocarBase(): void
   colocarAñadidos(): void
   getPostre(): Postre
 }
 
-interface PlatoFuerteBuilder { 
+interface PlatoFuerteBuilder extends GeneralBuilder { 
   colocarGuarniciones(): void
 }
 
@@ -63,6 +67,7 @@ interface CombinadoBuilder extends BebidaBuilder {
 // ----------------------------------------------------------
 
 export type {
+  GeneralBuilder,
   EntradaBuilder,
   BebidaBuilder,
   PlatoFuerteBuilder,
