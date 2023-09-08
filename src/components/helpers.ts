@@ -1,4 +1,4 @@
-import { EntradaBuilder, PostreBuilder, PlatoFuerteBuilder, BebidaBuilder } from '../classes/build/interfaces'
+import { PlatoFuerteBuilder, BebidaBuilder } from '../classes/build/interfaces'
 import SalchipapaBuilder from "../classes/build/Entradas/SalchipapaBuilder"
 import ChicharronBuilder from '../classes/build/Entradas/ChicharronesBuilder';
 import ArepitaBuilder from '../classes/build/Entradas/ArepitasBuilder';
@@ -23,14 +23,20 @@ import Plato1VBuilder from '../classes/build/PlatosFuertes/Plato1VBuilder';
 import Plato2VBuilder from '../classes/build/PlatosFuertes/Plato2VBuilder';
 import Plato3VBuilder from '../classes/build/PlatosFuertes/Plato3VBuilder';
 
-export const handleSeleccionEntrada = (entrada: { id: number, name: string, unavailable: boolean }, eb: EntradaBuilder) => {
+export const handleSeleccionEntrada = (entrada: { id: number, name: string, unavailable: boolean }) => {
+  let eb = new SalchipapaBuilder();
   if(entrada.id === 1) eb = new SalchipapaBuilder();
-  if(entrada.id === 2) eb = new ChicharronBuilder();
-  if(entrada.id === 3) eb = new ArepitaBuilder();
-  console.log(eb);
+  else if(entrada.id === 2) eb = new ChicharronBuilder();
+  else if(entrada.id === 3) eb = new ArepitaBuilder();
+  else {
+    return null;
+  }
+  console.log(eb)
+  return eb;
 }
 
-export const handleSeleccionBebida = (bebida: { id: number, name: string, unavailable: boolean }, bb: BebidaBuilder) => {
+export const handleSeleccionBebida = (bebida: { id: number, name: string, unavailable: boolean }) => {
+  let bb: BebidaBuilder;
   if(bebida.id === 1) bb = new CocaColaBuilder();
   else if(bebida.id === 2) bb = new PepsiBuilder();
   else if(bebida.id === 3) bb = new ColombianaBuilder();
@@ -40,10 +46,15 @@ export const handleSeleccionBebida = (bebida: { id: number, name: string, unavai
   else if(bebida.id === 7) bb = new MoraMangoBuilder();
   else if(bebida.id === 8) bb = new MaraMoraBuilder();
   else if(bebida.id === 9) bb = new MaracuMangoBuilder();
-  console.log(bb);
+  else {
+    return null;
+  }
+  console.log(bb)
+  return bb;  
 }
 
-export const handleSeleccionPlatoFuerte = (platoFuerte: { id: number, name: string, unavailable: boolean }, pfb: PlatoFuerteBuilder) => {
+export const handleSeleccionPlatoFuerte = (platoFuerte: { id: number, name: string, unavailable: boolean }) => {
+  let pfb: PlatoFuerteBuilder;
   if(platoFuerte.id === 1) pfb = new Plato1CBuilder();
   else if(platoFuerte.id === 2) pfb = new Plato2CBuilder();
   else if(platoFuerte.id === 3) pfb = new Plato3CBuilder();
@@ -51,13 +62,19 @@ export const handleSeleccionPlatoFuerte = (platoFuerte: { id: number, name: stri
   else if(platoFuerte.id === 5) pfb = new Plato1VBuilder();
   else if(platoFuerte.id === 6) pfb = new Plato2VBuilder();
   else if(platoFuerte.id === 7) pfb = new Plato3VBuilder();
-  console.log(pfb);
+  else {
+    return null;
+  }
+  console.log(pfb)
+  return pfb;
 }
 
-export const handleSeleccionPostre = (postre: { id: number, name: string, unavailable: boolean }, pb: PostreBuilder) => {
+export const handleSeleccionPostre = (postre: { id: number, name: string, unavailable: boolean }) => {
+  let pb = new Postre1Builder();
   if(postre.id === 1) pb = new Postre1Builder();
   if(postre.id === 2) pb = new Postre2Builder();
   if(postre.id === 3) pb = new Postre3Builder();
   if(postre.id === 4) pb = new Postre4Builder();
-  console.log(pb);
+  console.log(pb)
+  return pb;
 }

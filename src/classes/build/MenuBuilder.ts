@@ -3,6 +3,13 @@ import { BebidaBuilder } from "./interfaces";
 import { PlatoFuerteBuilder, PlatoCarnivoroBuilder, PlatoVegetarianoBuilder } from "./interfaces";
 import { PostreBuilder } from "./interfaces";
 import Menu from "../Model/Menu";
+import Plato1CBuilder from "./PlatosFuertes/Plato1CBuilder";
+import Plato2CBuilder from "./PlatosFuertes/Plato2CBuilder";
+import Plato3CBuilder from "./PlatosFuertes/Plato3CBuilder";
+import Plato4CBuilder from "./PlatosFuertes/Plato4CBuilder";
+import Plato1VBuilder from "./PlatosFuertes/Plato1VBuilder";
+import Plato2VBuilder from "./PlatosFuertes/Plato2VBuilder";
+import Plato3VBuilder from "./PlatosFuertes/Plato3VBuilder";
 
 export default class MenuBuilder {
 
@@ -29,10 +36,13 @@ export default class MenuBuilder {
 
     if(this.esPlatoCarnivoroBuilder(pfb)) {
       (pfb as PlatoCarnivoroBuilder).colocarCarne();
+      (pfb as PlatoCarnivoroBuilder).colocarGuarniciones();
+      this.menu.platoFuerte = (pfb as PlatoCarnivoroBuilder).getPlatoCarnivoro();
     } else if(this.esPlatoVegetarianoBuilder(pfb)) {
       (pfb as PlatoVegetarianoBuilder).colorcarFuerteVegetariano();
+      (pfb as PlatoVegetarianoBuilder).colocarGuarniciones();
+      this.menu.platoFuerte = (pfb as PlatoVegetarianoBuilder).getPlatoVegetariano();
     }
-    pfb.colocarGuarniciones();
     
   }
 
@@ -43,11 +53,11 @@ export default class MenuBuilder {
   }
 
   esPlatoCarnivoroBuilder(pfb: PlatoFuerteBuilder): boolean {
-    return pfb.constructor.name === 'PlatoCarnivoroBuilder';
+    return pfb instanceof Plato1CBuilder || pfb instanceof Plato2CBuilder || pfb instanceof Plato3CBuilder || pfb instanceof Plato4CBuilder;
   }
 
   esPlatoVegetarianoBuilder(pfb: PlatoFuerteBuilder): boolean {
-    return pfb.constructor.name === 'PlatoVegetarianoBuilder';
+    return pfb.constructor instanceof Plato1VBuilder || pfb instanceof Plato2VBuilder || pfb instanceof Plato3VBuilder;
   }
 
   esGaseosaBuilder(bb: BebidaBuilder): boolean {

@@ -1,13 +1,10 @@
-import { useState } from 'react'
-import ListaSeleccion from './components/ListaSeleccion'
+import { useState, Fragment } from 'react';
+import { Listbox, Transition } from '@headlessui/react'
 import Director from './classes/build/Director'
-import { EntradaBuilder, PostreBuilder, PlatoFuerteBuilder, BebidaBuilder } from './classes/build/interfaces'
-import { 
-  handleSeleccionEntrada, 
-  handleSeleccionBebida,
-  handleSeleccionPlatoFuerte,
-  handleSeleccionPostre
-} from './components/helpers'
+import Menu from './classes/Model/Menu'
+import CheckIcon from '@mui/icons-material/Check'
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import { handleSeleccionBebida, handleSeleccionEntrada, handleSeleccionPlatoFuerte, handleSeleccionPostre } from './components/helpers';
 
 /**
  * Tabla y resumen en tiempo real - Jimmy comida de estadio
@@ -52,73 +49,253 @@ const bebidas = [
 function App() {
 
   const ACME_IMAGE = 'src/sources/acme.jpeg'
-  const director = new Director();
-  const menusCreados = [];
+  const menusCreados: Menu[] = [];
 
-  let eb: EntradaBuilder;
-  let pfb: PlatoFuerteBuilder;
-  let pb: PostreBuilder;
-  let bb: BebidaBuilder;
-
-  const [cantidadMenus, setCantidadMenus] = useState(menusCreados.length);
+  const [entradaSeleccionada, setEntradaSeleccionada] = useState(entradas[0]);
+  const [platoFuerteSeleccionado, setPlatoFuerteSeleccionado] = useState(platosPrincipales[0]);
+  const [postreSeleccionado, setPostreSeleccionado] = useState(postres[0]);
+  const [bebidaSeleccionada, setBebidaSeleccionada] = useState(bebidas[0]);
 
   const handleCrearMenu = () => {
-    const menu = director.prepararMenu(eb, bb, pfb, pb);
-    menusCreados.push(menu);
-    setCantidadMenus(menusCreados.length);
+    const director = new Director();
+    director.eb = handleSeleccionEntrada(entradaSeleccionada);
+    director.pfb = handleSeleccionPlatoFuerte(platoFuerteSeleccionado);
+    director.bb = handleSeleccionBebida(postreSeleccionado);
+    director.pb = handleSeleccionPostre(bebidaSeleccionada);
+
+    director.prepararMenu();
+    menusCreados.push(director.getResultado());
+    localStorage.setItem('menus', JSON.stringify(menusCreados));
+    console.log(localStorage.getItem('menus'))
   }
 
   return (
-    <>
-      <section 
-        className='bg-cover w-full h-screen'
-        style={{
-          backgroundImage: `url(${ACME_IMAGE})`
-        }}>
-      </section>
+      <>
+        <section 
+          className='bg-cover w-full h-screen'
+          style={{
+            backgroundImage: `url(${ACME_IMAGE})`
+          }}>
+        </section>
 
-      <section className='h-screen grid grid-cols-2'>
+        <section className='h-screen grid grid-cols-2'>
 
-        <section className='mx-auto my-auto w-[75%]'>
-          
-          <ListaSeleccion 
-            listado={entradas} 
-            onChangeFunction={handleSeleccionEntrada}
-            builder={eb}
-            titulo='Entrada'>
-          </ListaSeleccion>
+          <section className='mx-auto my-auto w-[75%]'>
 
-          <ListaSeleccion
-            listado={platosPrincipales}
-            onChangeFunction={handleSeleccionPlatoFuerte}
-            builder={pfb}
-            titulo='Plato Fuerte'>
-          </ListaSeleccion>
+            <Listbox value={entradaSeleccionada} onChange={setEntradaSeleccionada}>
+              <div className='relative mt-1'>
+                <Listbox.Button className="relative w-full cursor-default rounded-lg bg-white py-2 pl-3 pr-10 text-left shadow-md focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm">
+                  <span className="block truncate">{entradaSeleccionada.name}</span>
+                  <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
+                    <KeyboardArrowDownIcon
+                      className="h-5 w-5 text-gray-400"
+                      aria-hidden="true"
+                    />
+                  </span>
+                </Listbox.Button>
+                <Transition
+                as={Fragment}
+                leave="transition ease-in duration-100"
+                leaveFrom="opacity-100"
+                leaveTo="opacity-0"
+              >
+                <Listbox.Options className="z-10 absolute mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
+                  {entradas.map((entrada, itemIdx) => (
+                    <Listbox.Option
+                      key={itemIdx}
+                      className={({ active }) =>
+                        `relative cursor-default select-none py-2 pl-10 pr-4 ${
+                          active ? 'bg-amber-100 text-amber-900' : 'text-gray-900'
+                        }`
+                      }
+                      value={entrada}
+                    >
+                      {({ selected }) => (
+                        <>
+                          <span
+                            className={`block truncate ${
+                              selected ? 'font-medium' : 'font-normal'
+                            }`}
+                          >
+                            {entrada.name}
+                          </span>
+                          {selected ? (
+                            <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-amber-600">
+                              <CheckIcon className="h-5 w-5" aria-hidden="true" />
+                            </span>
+                          ) : null}
+                        </>
+                      )}
+                    </Listbox.Option>
+                  ))}
+                </Listbox.Options>
+              </Transition>
+              </div>
+            </Listbox>
 
-          <ListaSeleccion
-            listado={postres}
-            onChangeFunction={handleSeleccionPostre}
-            builder={pb}
-            titulo='Postre'>
-          </ListaSeleccion>
+            <Listbox value={platoFuerteSeleccionado} onChange={setPlatoFuerteSeleccionado}>
+              <div className='relative mt-1'>
+                <Listbox.Button className="relative w-full cursor-default rounded-lg bg-white py-2 pl-3 pr-10 text-left shadow-md focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm">
+                  <span className="block truncate">{platoFuerteSeleccionado.name}</span>
+                  <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
+                    <KeyboardArrowDownIcon
+                      className="h-5 w-5 text-gray-400"
+                      aria-hidden="true"
+                    />
+                  </span>
+                </Listbox.Button>
+                <Transition
+                as={Fragment}
+                leave="transition ease-in duration-100"
+                leaveFrom="opacity-100"
+                leaveTo="opacity-0"
+              >
+                <Listbox.Options className="z-10 absolute mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
+                  {platosPrincipales.map((plato, itemIdx) => (
+                    <Listbox.Option
+                      key={itemIdx}
+                      className={({ active }) =>
+                        `relative cursor-default select-none py-2 pl-10 pr-4 ${
+                          active ? 'bg-amber-100 text-amber-900' : 'text-gray-900'
+                        }`
+                      }
+                      value={plato}
+                    >
+                      {({ selected }) => (
+                        <>
+                          <span
+                            className={`block truncate ${
+                              selected ? 'font-medium' : 'font-normal'
+                            }`}
+                          >
+                            {plato.name}
+                          </span>
+                          {selected ? (
+                            <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-amber-600">
+                              <CheckIcon className="h-5 w-5" aria-hidden="true" />
+                            </span>
+                          ) : null}
+                        </>
+                      )}
+                    </Listbox.Option>
+                  ))}
+                </Listbox.Options>
+              </Transition>
+              </div>
+            </Listbox>
 
-          <ListaSeleccion
-            listado={bebidas}
-            onChangeFunction={handleSeleccionBebida}
-            builder={bb}
-            titulo='Bebida'>
-          </ListaSeleccion>
+            <Listbox value={postreSeleccionado} onChange={setPostreSeleccionado}>
+              <div className='relative mt-1'>
+                <Listbox.Button className="relative w-full cursor-default rounded-lg bg-white py-2 pl-3 pr-10 text-left shadow-md focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm">
+                  <span className="block truncate">{postreSeleccionado.name}</span>
+                  <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
+                    <KeyboardArrowDownIcon
+                      className="h-5 w-5 text-gray-400"
+                      aria-hidden="true"
+                    />
+                  </span>
+                </Listbox.Button>
+                <Transition
+                as={Fragment}
+                leave="transition ease-in duration-100"
+                leaveFrom="opacity-100"
+                leaveTo="opacity-0"
+              >
+                <Listbox.Options className="z-10 absolute mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
+                  {postres.map((postre, itemIdx) => (
+                    <Listbox.Option
+                      key={itemIdx}
+                      className={({ active }) =>
+                        `relative cursor-default select-none py-2 pl-10 pr-4 ${
+                          active ? 'bg-amber-100 text-amber-900' : 'text-gray-900'
+                        }`
+                      }
+                      value={postre}
+                    >
+                      {({ selected }) => (
+                        <>
+                          <span
+                            className={`block truncate ${
+                              selected ? 'font-medium' : 'font-normal'
+                            }`}
+                          >
+                            {postre.name}
+                          </span>
+                          {selected ? (
+                            <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-amber-600">
+                              <CheckIcon className="h-5 w-5" aria-hidden="true" />
+                            </span>
+                          ) : null}
+                        </>
+                      )}
+                    </Listbox.Option>
+                  ))}
+                </Listbox.Options>
+              </Transition>
+              </div>
+            </Listbox>
 
-          <button className='w-full bg-[#F2EAD3] py-1.5 mt-[10%] shadow-md rounded-lg hover:transition-all hover:cursor-pointer hover:shadow-xl'
-          onClick={handleCrearMenu}>
-            Terminar menú!
+            <Listbox value={bebidaSeleccionada} onChange={setBebidaSeleccionada}>
+              <div className='relative mt-1'>
+                <Listbox.Button className="relative w-full cursor-default rounded-lg bg-white py-2 pl-3 pr-10 text-left shadow-md focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm">
+                  <span className="block truncate">{bebidaSeleccionada.name}</span>
+                  <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
+                    <KeyboardArrowDownIcon
+                      className="h-5 w-5 text-gray-400"
+                      aria-hidden="true"
+                    />
+                  </span>
+                </Listbox.Button>
+                <Transition
+                as={Fragment}
+                leave="transition ease-in duration-100"
+                leaveFrom="opacity-100"
+                leaveTo="opacity-0"
+              >
+                <Listbox.Options className="z-10 absolute mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
+                  {bebidas.map((bebida, itemIdx) => (
+                    <Listbox.Option
+                      key={itemIdx}
+                      className={({ active }) =>
+                        `relative cursor-default select-none py-2 pl-10 pr-4 ${
+                          active ? 'bg-amber-100 text-amber-900' : 'text-gray-900'
+                        }`
+                      }
+                      value={bebida}
+                    >
+                      {({ selected }) => (
+                        <>
+                          <span
+                            className={`block truncate ${
+                              selected ? 'font-medium' : 'font-normal'
+                            }`}
+                          >
+                            {bebida.name}
+                          </span>
+                          {selected ? (
+                            <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-amber-600">
+                              <CheckIcon className="h-5 w-5" aria-hidden="true" />
+                            </span>
+                          ) : null}
+                        </>
+                      )}
+                    </Listbox.Option>
+                  ))}
+                </Listbox.Options>
+              </Transition>
+              </div>
+            </Listbox>
+
+            <button className='w-full bg-[#F2EAD3] py-1.5 mt-[10%] shadow-md rounded-lg hover:transition-all hover:cursor-pointer hover:shadow-xl'
+            onClick={handleCrearMenu}>
+              Terminar menú!
           </button>
+
+          </section>
 
         </section>
 
-      </section>
-
-    </>
+      </>
   )
 }
 
