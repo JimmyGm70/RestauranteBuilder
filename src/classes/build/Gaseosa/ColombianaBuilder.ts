@@ -1,7 +1,7 @@
 import Gaseosa from "../../Model/Gaseosa";
 import { GaseosaBuilder } from "../interfaces";
 
-class CocaColaBuilder implements GaseosaBuilder {
+class ColombianaBuilder implements GaseosaBuilder {
 
   gaseosa: Gaseosa;
 
@@ -15,4 +15,4 @@ class CocaColaBuilder implements GaseosaBuilder {
 
 }
 
-export default CocaColaBuilder;
+export default ColombianaBuilder;

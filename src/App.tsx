@@ -1,4 +1,4 @@
-import { useState, Fragment } from 'react';
+import { useState, Fragment, useEffect } from 'react';
 import { Listbox, Transition } from '@headlessui/react'
 import Director from './classes/build/Director'
 import Menu from './classes/Model/Menu'
@@ -45,29 +45,41 @@ const bebidas = [
   { id: 8, name: 'Combinado de maramora', unavailable: false },
   { id: 9, name: 'Combinado de maracumango', unavailable: false },
 ]
+const menusCreados: Menu[] = [];
+const director = new Director();
 
 function App() {
 
   const ACME_IMAGE = 'src/sources/acme.jpeg'
-  const menusCreados: Menu[] = [];
 
   const [entradaSeleccionada, setEntradaSeleccionada] = useState(entradas[0]);
   const [platoFuerteSeleccionado, setPlatoFuerteSeleccionado] = useState(platosPrincipales[0]);
   const [postreSeleccionado, setPostreSeleccionado] = useState(postres[0]);
   const [bebidaSeleccionada, setBebidaSeleccionada] = useState(bebidas[0]);
 
-  const handleCrearMenu = () => {
-    const director = new Director();
+  useEffect(() => {
     director.eb = handleSeleccionEntrada(entradaSeleccionada);
-    director.pfb = handleSeleccionPlatoFuerte(platoFuerteSeleccionado);
-    director.bb = handleSeleccionBebida(postreSeleccionado);
-    director.pb = handleSeleccionPostre(bebidaSeleccionada);
+  }, [entradaSeleccionada])
 
+  useEffect(() => {
+    director.pb = handleSeleccionPostre(postreSeleccionado);
+  }, [postreSeleccionado])
+
+  useEffect(() => {
+    director.pfb = handleSeleccionPlatoFuerte(platoFuerteSeleccionado);
+  }, [platoFuerteSeleccionado])
+
+  useEffect(() => {
+    director.bb = handleSeleccionBebida(bebidaSeleccionada);
+  }, [bebidaSeleccionada])
+
+  const handleCrearMenu = () => {
     director.prepararMenu();
     menusCreados.push(director.getResultado());
+    director.menuBuilder.menu = new Menu();
     localStorage.setItem('menus', JSON.stringify(menusCreados));
-    console.log(localStorage.getItem('menus'))
-  }
+    console.log(menusCreados)
+  } 
 
   return (
       <>
@@ -289,7 +301,7 @@ function App() {
             <button className='w-full bg-[#F2EAD3] py-1.5 mt-[10%] shadow-md rounded-lg hover:transition-all hover:cursor-pointer hover:shadow-xl'
             onClick={handleCrearMenu}>
               Terminar menú!
-          </button>
+            </button>
 
           </section>
 
