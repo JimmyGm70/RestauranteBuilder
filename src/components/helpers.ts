@@ -31,7 +31,6 @@ export const handleSeleccionEntrada = (entrada: { id: number, name: string, unav
   else {
     return null;
   }
-  console.log(eb)
   return eb;
 }
 
@@ -49,7 +48,6 @@ export const handleSeleccionBebida = (bebida: { id: number, name: string, unavai
   else {
     return null;
   }
-  console.log(bb)
   return bb;  
 }
 
@@ -65,16 +63,15 @@ export const handleSeleccionPlatoFuerte = (platoFuerte: { id: number, name: stri
   else {
     return null;
   }
-  console.log(pfb)
   return pfb;
 }
 
 export const handleSeleccionPostre = (postre: { id: number, name: string, unavailable: boolean }) => {
+  console.log(postre)
   let pb = new Postre1Builder();
   if(postre.id === 1) pb = new Postre1Builder();
   if(postre.id === 2) pb = new Postre2Builder();
   if(postre.id === 3) pb = new Postre3Builder();
   if(postre.id === 4) pb = new Postre4Builder();
-  console.log(pb)
   return pb;
 }

@@ -10,6 +10,15 @@ import Plato4CBuilder from "./PlatosFuertes/Plato4CBuilder";
 import Plato1VBuilder from "./PlatosFuertes/Plato1VBuilder";
 import Plato2VBuilder from "./PlatosFuertes/Plato2VBuilder";
 import Plato3VBuilder from "./PlatosFuertes/Plato3VBuilder";
+import CocaColaBuilder from "./Gaseosa/CocaColaBuilder";
+import ColombianaBuilder from "./Gaseosa/ColombianaBuilder";
+import PepsiBuilder from "./Gaseosa/PepsiBuilder";
+import MangoBuilder from "./Jugo/MangoBuilder";
+import MaracuyaBuilder from "./Jugo/MaracuyaBuilder";
+import MoraBuilder from "./Jugo/MoraBuilder";
+import MaraMoraBuilder from "./Combinados/MaraMoraBuilder";
+import MaracuMangoBuilder from "./Combinados/MaracuMangoBuilder";
+import MoraMangoBuilder from "./Combinados/MoraMangoBuilder";
 
 export default class MenuBuilder {
 
@@ -28,6 +37,8 @@ export default class MenuBuilder {
       (bb as JugoBuilder).colocarFruta();
     } else if(this.esCombinadoBuilder(bb)) {
       (bb as CombinadoBuilder).colocarSabores();
+    } else if(this.esGaseosaBuilder(bb)) {
+      console.log(1)
     }
     this.menu.bebida = bb.getBebida();
   }
@@ -43,7 +54,6 @@ export default class MenuBuilder {
       (pfb as PlatoVegetarianoBuilder).colocarGuarniciones();
       this.menu.platoFuerte = (pfb as PlatoVegetarianoBuilder).getPlatoVegetariano();
     }
-    
   }
 
   public colocarPostre(pb: PostreBuilder): void {
@@ -61,15 +71,15 @@ export default class MenuBuilder {
   }
 
   esGaseosaBuilder(bb: BebidaBuilder): boolean {
-    return bb.constructor.name === 'GaseosaBuilder';
+    return bb instanceof CocaColaBuilder || bb instanceof ColombianaBuilder || bb instanceof PepsiBuilder;
   }
 
   esJugoBuilder(bb: BebidaBuilder): boolean {
-    return bb.constructor.name === 'JugoBuilder';
+    return bb instanceof MangoBuilder || bb instanceof MaracuyaBuilder || bb instanceof MoraBuilder;
   }
 
   esCombinadoBuilder(bb: BebidaBuilder): boolean {
-    return bb.constructor.name === 'CombinadoBuilder';
+    return bb instanceof MaraMoraBuilder || bb instanceof MaracuMangoBuilder || bb instanceof MoraMangoBuilder;
   }
 
 }
