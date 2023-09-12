@@ -22,7 +22,7 @@ export default class Menu{
 
         if (this.bebida) valorMenu += this.bebida.precio;
         if (this.entrada) valorMenu += this.entrada.precio;
-        if (this.platoFuerte) valorMenu += this.platoFuerte.precio;
+        if (this.platoFuerte) valorMenu += this.platoFuerte?.precio;
         if (this.postre) valorMenu += this.postre.precio;
 
         return valorMenu;
