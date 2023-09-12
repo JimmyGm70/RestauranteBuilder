@@ -20,7 +20,7 @@ import MaraMoraBuilder from "./Combinados/MaraMoraBuilder";
 import MaracuMangoBuilder from "./Combinados/MaracuMangoBuilder";
 import MoraMangoBuilder from "./Combinados/MoraMangoBuilder";
 
-export default class MenuBuilder {
+export default class MenuBuilder {  
 
   menu: Menu
 
@@ -38,7 +38,7 @@ export default class MenuBuilder {
     } else if(this.esCombinadoBuilder(bb)) {
       (bb as CombinadoBuilder).colocarSabores();
     } else if(this.esGaseosaBuilder(bb)) {
-      console.log(1)
+      
     }
     this.menu.bebida = bb.getBebida();
   }
