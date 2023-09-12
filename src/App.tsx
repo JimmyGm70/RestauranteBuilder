@@ -10,6 +10,7 @@ import Plato2CBuilder from './classes/build/PlatosFuertes/Plato2CBuilder';
 import Plato3CBuilder from './classes/build/PlatosFuertes/Plato3CBuilder';
 import Plato4CBuilder from './classes/build/PlatosFuertes/Plato4CBuilder';
 import MenuTable from './components/MenuTable';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 /**
  * Tabla y resumen en tiempo real - Jimmy comida de estadio
@@ -91,17 +92,34 @@ function App() {
   setPrecioCuenta(menusCreados.reduce((acumulador, precioMenu) => acumulador + precioMenu.calcularCosto(), 0));
   } 
 
+
   return (
       <>
-        <section 
-          className='bg-cover w-full h-screen'
-          style={{
-            backgroundImage: `url(${ACME_IMAGE})`
+        <section className='bg-cover w-full h-screen flex flex-col justify-center items-center'
+        style={{
+          backgroundImage: `url(${ACME_IMAGE})`,
+          backgroundBlendMode: 'multiply',
+          backgroundColor: 'rgba(0,0,0,0.5)',
+        }}>
+        <h1 className='font-bold z-10 text-transparent bg-clip-text bg-gradient-to-r from-[#DFD7BF] to-[#A5A5A5] text-8xl line-height: 1 text-center'>
+          Restaurantes Acme
+        </h1>
+        <div className='absolute bottom-5'>
+          <button className='bg-[#DFD7BF] py-0.5 px-5 rounded-lg'
+          onClick={() => {
+            const element = document.getElementById('form-menus');
+            if (element) {
+              element.scrollIntoView({ behavior: 'smooth' });
+            }
           }}>
-        </section>
+            <ExpandMoreIcon className='text-6xl text-white' />
+          </button>
+        </div>
+      </section>
 
-        <section className='h-screen grid grid-cols-2'>
-          
+
+        <section className='h-screen grid grid-cols-2' id='form-menus'>
+
           <section className='mx-auto my-auto w-[75%]'>
 
             <Listbox value={entradaSeleccionada} onChange={setEntradaSeleccionada}>
