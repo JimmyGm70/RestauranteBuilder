@@ -11,10 +11,11 @@ import Plato3CBuilder from './classes/build/PlatosFuertes/Plato3CBuilder';
 import Plato4CBuilder from './classes/build/PlatosFuertes/Plato4CBuilder';
 import MenuTable from './components/MenuTable';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import { PlatoCarnivoroBuilder } from './classes/build/interfaces';
 
 /**
  * Tabla y resumen en tiempo real - Jimmy comida de estadio
- * Landing Page y Formulario de Menú - Pablo Bichote 
+ * Landing Page y Formulario de Menú - Pablo Bichot 
  */
 
 const entradas = [
@@ -64,13 +65,13 @@ function App() {
   const [postreSeleccionado, setPostreSeleccionado] = useState(postres[0]);
   const [bebidaSeleccionada, setBebidaSeleccionada] = useState(bebidas[0]);
   const [precioCuenta, setPrecioCuenta] = useState(0);
-  
 
   useEffect(() => {
     director.eb = handleSeleccionEntrada(entradaSeleccionada);
     director.pb = handleSeleccionPostre(postreSeleccionado);
     director.pfb = handleSeleccionPlatoFuerte(platoFuerteSeleccionado);
     director.bb = handleSeleccionBebida(bebidaSeleccionada);  
+    console.log(precios)
   }, [entradaSeleccionada, platoFuerteSeleccionado, postreSeleccionado, bebidaSeleccionada]);
 
   const platoFuerte = handleSeleccionPlatoFuerte(platoFuerteSeleccionado);
@@ -80,16 +81,16 @@ function App() {
   }
 
   precios[0] = handleSeleccionEntrada(entradaSeleccionada)?.getEntrada().precio;
-  precios[1] = comprobacion() ? platoFuerte.getPlatoCarnivoro().precio : platoFuerte.getPlatoVegetariano().precio;
+  precios[1] = comprobacion() ? (platoFuerte.getPlatoCarnivoro() as PlatoCarnivoroBuilder).precio : platoFuerte.getPlatoVegetariano().precio;
   precios[2] = handleSeleccionPostre(postreSeleccionado)?.getPostre().precio;
   precios[3] = handleSeleccionBebida(bebidaSeleccionada)?.getBebida().precio;
   
   const handleCrearMenu = () => {
-  director.prepararMenu();
-  menusCreados.push(director.getResultado());
-  director.menuBuilder.menu = new Menu();
-  localStorage.setItem('menus', JSON.stringify(menusCreados));
-  setPrecioCuenta(menusCreados.reduce((acumulador, precioMenu) => acumulador + precioMenu.calcularCosto(), 0));
+    director.prepararMenu();
+    menusCreados.push(director.getResultado());
+    director.menuBuilder.menu = new Menu();
+    localStorage.setItem('menus', JSON.stringify(menusCreados));
+    setPrecioCuenta(menusCreados.reduce((acumulador, precioMenu) => acumulador + precioMenu.calcularCosto(), 0));
   } 
 
 
@@ -329,16 +330,18 @@ function App() {
             <button className='w-full bg-[#F2EAD3] py-1.5 mt-[10%] shadow-md rounded-lg hover:transition-all hover:cursor-pointer hover:shadow-xl'
             onClick={handleCrearMenu}>
               <span className='font-bold'>Terminar menú!</span>
-            </button>
+          </button>
+
+          <section className="py-1.5 mt-5 bg-[#F2EAD3]">
+            <span className= "text-center flex justify-center text-lg font-semibold font-black text-[#3F2305] rounded-md">{"Total de la cuenta $"+precioCuenta}</span>
           </section>
-          <section className="mx-auto my-auto">
-            <MenuTable menu={precios}></MenuTable>
-          </section>
-          <section className="h-16 w-96 ml-72 mb-96 bg-[#F2EAD3]">
-            <span className= "text-center flex justify-center mt-4  text-lg font-black text-[#3F2305] rounded-md">{"Total de la cuenta $"+precioCuenta}</span>
-          </section>
-            
         </section>
+          
+        <section className="mx-auto my-auto">
+          <MenuTable menu={precios}></MenuTable>
+        </section>
+            
+      </section>
         
 
       </>
