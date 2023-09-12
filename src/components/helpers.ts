@@ -67,7 +67,6 @@ export const handleSeleccionPlatoFuerte = (platoFuerte: { id: number, name: stri
 }
 
 export const handleSeleccionPostre = (postre: { id: number, name: string, unavailable: boolean }) => {
-  console.log(postre)
   let pb = new Postre1Builder();
   if(postre.id === 1) pb = new Postre1Builder();
   if(postre.id === 2) pb = new Postre2Builder();

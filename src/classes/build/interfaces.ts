@@ -9,40 +9,40 @@ import Jugo from "../Model/Jugo"
 
 // Objetivo: Definir las interfaces de los builders
 
-interface GeneralBuilder {
+export interface GeneralBuilder {
 
 }
 
-interface EntradaBuilder extends GeneralBuilder {
+export interface EntradaBuilder extends GeneralBuilder {
   entrada: Entrada
   getEntrada(): Entrada
 }
 
-interface BebidaBuilder extends GeneralBuilder {   
+export interface BebidaBuilder extends GeneralBuilder {   
   getBebida(): Bebida
 } 
 
-interface PostreBuilder extends GeneralBuilder {
+export interface PostreBuilder extends GeneralBuilder {
   postre: Postre
   colocarBase(): void
   colocarAñadidos(): void
   getPostre(): Postre
 }
 
-interface PlatoFuerteBuilder extends GeneralBuilder { 
+export interface PlatoFuerteBuilder extends GeneralBuilder { 
   colocarGuarniciones(): void
 }
 
 
 // ----------------------------------------------------------
 
-interface PlatoCarnivoroBuilder extends PlatoFuerteBuilder {
+export interface PlatoCarnivoroBuilder extends PlatoFuerteBuilder {
   platoCarnivoro: PlatoCarnivoro
   colocarCarne(): void
   getPlatoCarnivoro(): PlatoCarnivoro
 }
 
-interface PlatoVegetarianoBuilder extends PlatoFuerteBuilder {
+export interface PlatoVegetarianoBuilder extends PlatoFuerteBuilder {
   platoVegetariano: PlatoVegetariano
   colorcarFuerteVegetariano(): void
   getPlatoVegetariano(): PlatoVegetariano
@@ -50,31 +50,17 @@ interface PlatoVegetarianoBuilder extends PlatoFuerteBuilder {
 
 // ----------------------------------------------------------
 
-interface GaseosaBuilder extends BebidaBuilder {
+export interface GaseosaBuilder extends BebidaBuilder {
   gaseosa: Gaseosa
 }
 
-interface JugoBuilder extends BebidaBuilder {
+export interface JugoBuilder extends BebidaBuilder {
   jugo: Jugo
   colocarFruta(): void
 }
 
-interface CombinadoBuilder extends BebidaBuilder {
+export interface CombinadoBuilder extends BebidaBuilder {
   combinado: JugoCombinado
   colocarSabores(): void
 }
-
 // ----------------------------------------------------------
-
-export type {
-  GeneralBuilder,
-  EntradaBuilder,
-  BebidaBuilder,
-  PlatoFuerteBuilder,
-  PostreBuilder,
-  PlatoCarnivoroBuilder,
-  PlatoVegetarianoBuilder,
-  GaseosaBuilder,
-  JugoBuilder,
-  CombinadoBuilder
-}

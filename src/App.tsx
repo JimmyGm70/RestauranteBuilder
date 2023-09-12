@@ -4,7 +4,12 @@ import Director from './classes/build/Director'
 import Menu from './classes/Model/Menu'
 import CheckIcon from '@mui/icons-material/Check'
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import { handleSeleccionBebida, handleSeleccionEntrada, handleSeleccionPlatoFuerte, handleSeleccionPostre } from './components/helpers';
+import { handleSeleccionBebida, handleSeleccionEntrada, handleSeleccionPlatoFuerte, handleSeleccionPostre,} from './components/helpers';
+import Plato1CBuilder from './classes/build/PlatosFuertes/Plato1CBuilder';
+import Plato2CBuilder from './classes/build/PlatosFuertes/Plato2CBuilder';
+import Plato3CBuilder from './classes/build/PlatosFuertes/Plato3CBuilder';
+import Plato4CBuilder from './classes/build/PlatosFuertes/Plato4CBuilder';
+import MenuTable from './components/MenuTable';
 
 /**
  * Tabla y resumen en tiempo real - Jimmy comida de estadio
@@ -47,6 +52,7 @@ const bebidas = [
 ]
 const menusCreados: Menu[] = [];
 const director = new Director();
+const precios:number[] = [0,0,0,0]
 
 function App() {
 
@@ -56,29 +62,33 @@ function App() {
   const [platoFuerteSeleccionado, setPlatoFuerteSeleccionado] = useState(platosPrincipales[0]);
   const [postreSeleccionado, setPostreSeleccionado] = useState(postres[0]);
   const [bebidaSeleccionada, setBebidaSeleccionada] = useState(bebidas[0]);
+  const [precioCuenta, setPrecioCuenta] = useState(0);
+  
 
   useEffect(() => {
     director.eb = handleSeleccionEntrada(entradaSeleccionada);
-  }, [entradaSeleccionada])
-
-  useEffect(() => {
     director.pb = handleSeleccionPostre(postreSeleccionado);
-  }, [postreSeleccionado])
-
-  useEffect(() => {
     director.pfb = handleSeleccionPlatoFuerte(platoFuerteSeleccionado);
-  }, [platoFuerteSeleccionado])
+    director.bb = handleSeleccionBebida(bebidaSeleccionada);  
+  }, [entradaSeleccionada, platoFuerteSeleccionado, postreSeleccionado, bebidaSeleccionada]);
 
-  useEffect(() => {
-    director.bb = handleSeleccionBebida(bebidaSeleccionada);
-  }, [bebidaSeleccionada])
+  const platoFuerte = handleSeleccionPlatoFuerte(platoFuerteSeleccionado);
+  
+  const comprobacion = () => {
+    return platoFuerte instanceof Plato1CBuilder || platoFuerte instanceof Plato2CBuilder || platoFuerte instanceof Plato3CBuilder || platoFuerte instanceof Plato4CBuilder;
+  }
 
+  precios[0] = handleSeleccionEntrada(entradaSeleccionada)?.getEntrada().precio;
+  precios[1] = comprobacion() ? platoFuerte.getPlatoCarnivoro().precio : platoFuerte.getPlatoVegetariano().precio;
+  precios[2] = handleSeleccionPostre(postreSeleccionado)?.getPostre().precio;
+  precios[3] = handleSeleccionBebida(bebidaSeleccionada)?.getBebida().precio;
+  
   const handleCrearMenu = () => {
-    director.prepararMenu();
-    menusCreados.push(director.getResultado());
-    director.menuBuilder.menu = new Menu();
-    localStorage.setItem('menus', JSON.stringify(menusCreados));
-    console.log(menusCreados)
+  director.prepararMenu();
+  menusCreados.push(director.getResultado());
+  director.menuBuilder.menu = new Menu();
+  localStorage.setItem('menus', JSON.stringify(menusCreados));
+  setPrecioCuenta(menusCreados.reduce((acumulador, precioMenu) => acumulador + precioMenu.calcularCosto(), 0));
   } 
 
   return (
@@ -91,13 +101,13 @@ function App() {
         </section>
 
         <section className='h-screen grid grid-cols-2'>
-
+          
           <section className='mx-auto my-auto w-[75%]'>
 
             <Listbox value={entradaSeleccionada} onChange={setEntradaSeleccionada}>
               <div className='relative mt-1'>
                 <Listbox.Button className="relative w-full cursor-default rounded-lg bg-white py-2 pl-3 pr-10 text-left shadow-md focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm">
-                  <span className="block truncate">{entradaSeleccionada.name}</span>
+                  <span className="block truncate cursor-pointer">{entradaSeleccionada.name}</span>
                   <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
                     <KeyboardArrowDownIcon
                       className="h-5 w-5 text-gray-400"
@@ -148,7 +158,7 @@ function App() {
             <Listbox value={platoFuerteSeleccionado} onChange={setPlatoFuerteSeleccionado}>
               <div className='relative mt-1'>
                 <Listbox.Button className="relative w-full cursor-default rounded-lg bg-white py-2 pl-3 pr-10 text-left shadow-md focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm">
-                  <span className="block truncate">{platoFuerteSeleccionado.name}</span>
+                  <span className="block truncate cursor-pointer">{platoFuerteSeleccionado.name}</span>
                   <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
                     <KeyboardArrowDownIcon
                       className="h-5 w-5 text-gray-400"
@@ -199,7 +209,7 @@ function App() {
             <Listbox value={postreSeleccionado} onChange={setPostreSeleccionado}>
               <div className='relative mt-1'>
                 <Listbox.Button className="relative w-full cursor-default rounded-lg bg-white py-2 pl-3 pr-10 text-left shadow-md focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm">
-                  <span className="block truncate">{postreSeleccionado.name}</span>
+                  <span className="block truncate cursor-pointer">{postreSeleccionado.name}</span>
                   <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
                     <KeyboardArrowDownIcon
                       className="h-5 w-5 text-gray-400"
@@ -250,7 +260,7 @@ function App() {
             <Listbox value={bebidaSeleccionada} onChange={setBebidaSeleccionada}>
               <div className='relative mt-1'>
                 <Listbox.Button className="relative w-full cursor-default rounded-lg bg-white py-2 pl-3 pr-10 text-left shadow-md focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm">
-                  <span className="block truncate">{bebidaSeleccionada.name}</span>
+                  <span className="block truncate cursor-pointer">{bebidaSeleccionada.name}</span>
                   <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
                     <KeyboardArrowDownIcon
                       className="h-5 w-5 text-gray-400"
@@ -300,12 +310,18 @@ function App() {
 
             <button className='w-full bg-[#F2EAD3] py-1.5 mt-[10%] shadow-md rounded-lg hover:transition-all hover:cursor-pointer hover:shadow-xl'
             onClick={handleCrearMenu}>
-              Terminar menú!
+              <span className='font-bold'>Terminar menú!</span>
             </button>
-
           </section>
-
+          <section className="mx-auto my-auto">
+            <MenuTable menu={precios}></MenuTable>
+          </section>
+          <section className="h-16 w-96 ml-72 mb-96 bg-[#F2EAD3]">
+            <span className= "text-center flex justify-center mt-4  text-lg font-black text-[#3F2305] rounded-md">{"Total de la cuenta $"+precioCuenta}</span>
+          </section>
+            
         </section>
+        
 
       </>
   )
